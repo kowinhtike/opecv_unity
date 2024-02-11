@@ -16,13 +16,15 @@ public class AndroidCamera : MonoBehaviour
     CascadeClassifier cascade;
     OpenCvSharp.Rect rectangle;
 
+    
+
     // Start is called before the first frame update
     void Start()
     {
         webCamTexture = new WebCamTexture();
         webCamTexture.Play();
         renderer = GetComponent<Renderer>();
-
+        renderer.material.mainTexture = webCamTexture;
         cascade = new CascadeClassifier("Assets/haarcascade_frontalface_default.xml");
 
     }
@@ -42,6 +44,7 @@ public class AndroidCamera : MonoBehaviour
         {
             Debug.Log(faces[0].Location);
             rectangle = faces[0];
+            
 
         }
     }
@@ -54,5 +57,6 @@ public class AndroidCamera : MonoBehaviour
         }
         Texture newTexture = OpenCvSharp.Unity.MatToTexture(frame);
         GetComponent<Renderer>().material.mainTexture = newTexture;
+       
     }
 }

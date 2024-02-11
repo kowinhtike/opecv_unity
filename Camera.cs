@@ -9,6 +9,8 @@ public class NewBehaviourScript : MonoBehaviour
     CascadeClassifier cascade;
     OpenCvSharp.Rect rectangle;
 
+    //public GameObject gameObject;
+
     // Start is called before the first frame update
     // https://www.youtube.com/watch?v=lXvt66A0i3Q
     void Start()
