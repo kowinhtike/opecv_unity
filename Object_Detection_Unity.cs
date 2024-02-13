@@ -4,12 +4,13 @@ using OpenCvSharp; // Assuming OpenCV+Unity package uses OpenCvSharp or similar
 using System.Linq;
 using UnityEngine.Diagnostics;
 
-public class ObjectDetect : MonoBehaviour
+public class Builtin : MonoBehaviour
 {
-    public WebCamTexture webcamTexture;
+    private WebCamTexture webcamTexture;
+    public GameObject ballObj;
     private Mat frame;
-    private Scalar lowYellow = new Scalar(24, 110, 120); // Adjust based on your specific needs
-    private Scalar highYellow = new Scalar(29, 255, 255); // Adjust based on your specific needs
+    private Scalar lowYellow = new Scalar(23, 110, 120); // Adjust based on your specific needs
+    private Scalar highYellow = new Scalar(28, 255, 255); // Adjust based on your specific needs
 
     void Start()
     {
@@ -26,14 +27,14 @@ public class ObjectDetect : MonoBehaviour
     {
         if (webcamTexture.didUpdateThisFrame && webcamTexture.isPlaying)
         {
-             // Convert WebCamTexture to Mat
+            // Convert WebCamTexture to Mat
             frame = OpenCvSharp.Unity.TextureToMat(webcamTexture);
 
             Mat hsvFrame = new Mat();
             Cv2.CvtColor(frame, hsvFrame, ColorConversionCodes.BGR2HSV); // Convert frame to HSV
 
             Mat redMask = new Mat();
-            Cv2.InRange(hsvFrame, lowYellow,highYellow, redMask); // Create mask for red colors
+            Cv2.InRange(hsvFrame, lowYellow, highYellow, redMask); // Create mask for red colors
 
             // Find contours
             Cv2.FindContours(redMask, out Point[][] contours, out HierarchyIndex[] hierarchy, RetrievalModes.Tree, ContourApproximationModes.ApproxSimple);
@@ -51,6 +52,9 @@ public class ObjectDetect : MonoBehaviour
 
                 Cv2.Line(frame, new Point(xMedium, 0), new Point(xMedium, frame.Rows), new Scalar(0, 255, 0), 2); // Draw vertical line
                 Cv2.Line(frame, new Point(0, yMedium), new Point(frame.Cols, yMedium), new Scalar(0, 255, 0), 2); // Draw horizontal line
+
+                //set transform for object
+                ballObj.transform.position = new Vector3((-xMedium / 40)+4, 0, 0);
             }
 
             // Convert Mat back to Texture2D and apply to material
